@@ -41,8 +41,9 @@ RF24 radio(9, 10);
 const uint64_t pipes[2] = {
 	0xF0F0F0F0E1LL, 0xF0F0F0F0D3LL
 };
+int tempdiff = 1; //Roznica temperatury powodujaca meldunek
 int lasttemp = 0;
-int tmp = 1;
+int tmp = 0;
 bool on = false;
 const unsigned long postingInterval = 120000;
 unsigned long lastRequest = 0;
@@ -128,7 +129,8 @@ void loop() {
 		}
 		lastRequest = now;
 	}
-	if (lasttemp != t){
+        int dtemp = lasttemp - t;
+	if (abs(dtemp) > (tempdiff-1)) {
 		SendData();
 		lasttemp = t;
 	}
